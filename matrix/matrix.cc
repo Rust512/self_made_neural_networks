@@ -14,6 +14,10 @@ double rand_range(int low, int high) {
     return low + (high - low) * random_double();
 }
 
+void separate() {
+    std::cout << "------------------------------------------------------\n";
+}
+
 class Matrix {
 private:
     std::vector<double> entries;
@@ -28,10 +32,22 @@ public:
     }
 
     double at(size_t i, size_t j) const {
+        assert(i < rows);
+        assert(j < cols);
         return entries[cols * i + j];
     }
 
+    std::vector<double> getAllEntries() const {
+        return entries;
+    }
+
+    void setAllEntries(std::vector<double> newEntries) {
+        entries = newEntries;
+    }
+
     void set(size_t i, size_t j, double val) {
+        assert(i < rows);
+        assert(j < cols);
         entries[cols * i + j] = val;
     }
 
@@ -56,6 +72,16 @@ public:
                 set(i, j, rand_range(low, high));
             }
         }
+    }
+
+    void defaultInitialization() {
+        initializeEntries(-2, 2);
+    }
+
+    void operator= (const Matrix& mat) {
+        rows = mat.rows;
+        cols = mat.cols;
+        setAllEntries(mat.getAllEntries());
     }
 
     Matrix operator+ (const Matrix& mat) {
@@ -142,21 +168,3 @@ public:
         }
     }
 };
-
-int main() {
-    Matrix matrix1(1, 2);
-    matrix1.initializeEntries(0, 4);
-
-    Matrix matrix2(2, 2);
-    matrix2.initializeEntries(5, 9);
-
-    Matrix result = matrix1 * matrix2;
-
-    matrix1.print();
-    std::cout << "------------------------------------------------------------\n";
-    matrix2.print();
-    std::cout << "------------------------------------------------------------\n";
-
-    result.print();
-    return 0;
-}
